@@ -15,7 +15,7 @@ import torch.utils.data as data
 from imageio import imread
 import xml.etree.ElementTree as ET
 import glob
-# import tensorflow as tf
+import tensorflow as tf
 import numpy as np
 import os
 
@@ -202,20 +202,19 @@ def weights_init_normal(m):
 
 # Code referenced from https://gist.github.com/gyglim/1f8dfb1b5c82627ae3efcfbbadb9f514
 class Logger(object):
-
-
-
     def __init__(self, log_dir):
         """Create a summary writer logging to log_dir."""
-        self.writer = tf.summary.FileWriter(log_dir)
-        # self.writer = tf.summary.create_file_writer(log_dir)
+        #self.writer = tf.summary.FileWriter(log_dir)
+        self.writer = tf.summary.create_file_writer(log_dir)
         
     def scalar_summary(self, tag, value, step):
         """Log a scalar variable."""
-        summary = tf.Summary(value=[tf.Summary.Value(tag=tag, simple_value=value)])
+        #summary = tf.Summary(value=[tf.Summary.Value(tag=tag, simple_value=value)])
+        #self.writer.add_summary(summary, step)
+        with self.writer.as_default():
+            tf.summary.scalar(tag, data=value, step=step)
 
-        self.writer.add_summary(summary, step)
-
+    '''
     def image_summary(self, tag, images, step):
         """Log a list of images."""
 
@@ -269,7 +268,7 @@ class Logger(object):
 
         self.writer.add_summary(summary, step)
         self.writer.flush()
-
+    '''
 ##voc12 load
 EXTENSIONS = ['.jpg', '.png']
 
